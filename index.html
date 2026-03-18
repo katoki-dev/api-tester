@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal API Tester</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                    </svg>
+                    <span>API Tester</span>
+                </div>
+            </div>
+
+            <!-- Connection -->
+            <div class="sidebar-section">
+                <div class="section-label">CONNECTION</div>
+                <div class="connection-form">
+                    <label class="form-label">API Base URL</label>
+                    <input type="text" id="baseUrl" class="form-input" value="https://api.example.com" placeholder="https://api.example.com">
+                    <label class="form-label mt-12">Authorization Token</label>
+                    <textarea id="jwtToken" class="form-input token-input" placeholder="Paste your Bearer token here..."></textarea>
+                    <button class="btn btn-sm btn-secondary btn-block mt-8" onclick="testConnection()">
+                        <span class="btn-icon">⚡</span> Test Connection
+                    </button>
+                </div>
+            </div>
+
+            <!-- Request History -->
+            <div class="sidebar-section">
+                <div class="section-label">HISTORY</div>
+                <div id="historyList" class="history-list">
+                    <div class="history-empty">No requests yet</div>
+                </div>
+                <button class="btn btn-sm btn-ghost btn-block mt-8" onclick="clearHistory()">Clear History</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <div class="request-bar">
+                    <select id="httpMethod" class="method-select" title="HTTP Method">
+                        <option value="GET">GET</option>
+                        <option value="POST" selected>POST</option>
+                        <option value="PUT">PUT</option>
+                        <option value="DELETE">DELETE</option>
+                        <option value="PATCH">PATCH</option>
+                    </select>
+                    <input type="text" id="requestPath" class="path-input" placeholder="/v1/resource" value="/v1/resource">
+                    <button class="btn btn-primary btn-send" onclick="sendRequest()">
+                        <span class="btn-icon">▶</span> Send
+                    </button>
+                </div>
+            </div>
+
+            <!-- Preset Operations -->
+            <div class="presets-bar">
+                <div class="presets-label">Presets:</div>
+                <button class="preset-chip" onclick="loadPreset('get')">🔍 Get Resource</button>
+                <button class="preset-chip" onclick="loadPreset('create')">➕ Create</button>
+                <button class="preset-chip" onclick="loadPreset('update')">📝 Update</button>
+                <button class="preset-chip" onclick="loadPreset('delete')">🗑️ Delete</button>
+                <div class="presets-divider"></div>
+                <button class="preset-chip preset-mgmt" onclick="loadPreset('health')">💚 Health Check</button>
+            </div>
+
+            <!-- Split Panes -->
+            <div class="panes">
+                <!-- Request Pane -->
+                <div class="pane request-pane">
+                    <div class="pane-header">
+                        <div class="pane-tabs">
+                            <button class="pane-tab active" onclick="switchTab(this, 'bodyTab')">Body</button>
+                            <button class="pane-tab" onclick="switchTab(this, 'headersTab')">Headers</button>
+                        </div>
+                    </div>
+                    <div class="pane-content" id="bodyTab">
+                        <textarea id="requestBody" class="code-editor" spellcheck="false" placeholder='{"key": "value"}'>{
+  "name": "Universal API Tester",
+  "description": "Ready to test any REST API"
+}</textarea>
+                    </div>
+                    <div class="pane-content hidden" id="headersTab">
+                        <div class="headers-display">
+                            <div class="header-row">
+                                <span class="header-key">Content-Type</span>
+                                <span class="header-value">application/json</span>
+                            </div>
+                            <div class="header-row">
+                                <span class="header-key">Authorization</span>
+                                <span class="header-value" id="authHeaderPreview">Bearer &lt;token&gt;</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Response Pane -->
+                <div class="pane response-pane">
+                    <div class="pane-header">
+                        <span class="pane-title">Response</span>
+                        <div class="response-meta">
+                            <span class="meta-badge" id="statusBadge">—</span>
+                            <span class="meta-text" id="responseTime">—</span>
+                            <span class="meta-text" id="responseSize">—</span>
+                        </div>
+                    </div>
+                    <div class="pane-content">
+                        <pre class="response-body" id="responseBody"><span class="response-placeholder">Send a request to see the response here</span></pre>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
