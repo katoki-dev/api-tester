@@ -442,6 +442,7 @@ body {
     flex: 1;
     overflow: auto;
     position: relative;
+    min-height: 0; /* required for flex children to scroll */
 }
 
 .pane-content.hidden { display: none; }
@@ -563,3 +564,114 @@ body {
 .method-select.PUT    { color: var(--method-put); }
 .method-select.DELETE { color: var(--method-delete); }
 .method-select.PATCH  { color: var(--method-patch); }
+
+/* ═══ Mobile Menu Button ═══ */
+.mobile-menu-btn {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 8px;
+    border-radius: var(--radius-sm);
+    flex-shrink: 0;
+    transition: all 0.15s;
+}
+.mobile-menu-btn:hover {
+    color: var(--text-primary);
+    background: var(--bg-elevated);
+}
+
+/* ═══ Sidebar Backdrop (mobile) ═══ */
+.sidebar-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 99;
+    backdrop-filter: blur(2px);
+}
+.sidebar-backdrop.visible { display: block; }
+
+/* ═══ Mobile: ≤ 768px ═══ */
+@media (max-width: 768px) {
+    body {
+        height: 100dvh;
+        height: 100vh; /* fallback */
+    }
+
+    .app {
+        height: 100dvh;
+        height: 100vh; /* fallback */
+    }
+
+    .mobile-menu-btn {
+        display: flex;
+    }
+
+    /* Sidebar becomes a slide-over drawer */
+    .sidebar {
+        position: fixed;
+        left: -100%;
+        top: 0;
+        height: 100%;
+        width: min(var(--sidebar-width), 85vw);
+        z-index: 100;
+        transition: left 0.25s ease;
+        overflow-y: auto;
+        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.5);
+    }
+    .sidebar.open { left: 0; }
+
+    /* Top bar: make room for hamburger */
+    .top-bar {
+        padding: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .request-bar { flex: 1; }
+
+    /* Presets bar: scroll horizontally, no wrap */
+    .presets-bar {
+        flex-wrap: nowrap;
+        padding: 8px 12px;
+    }
+
+    /* Stack panes vertically */
+    .panes { flex-direction: column; }
+
+    .request-pane {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        flex: none;
+        height: 40vh;
+    }
+
+    .response-pane { flex: 1; }
+}
+
+/* ═══ Mobile: ≤ 480px ═══ */
+@media (max-width: 480px) {
+    .request-bar { flex-wrap: wrap; }
+
+    .method-select {
+        border-right: 1px solid var(--border);
+        min-width: 72px;
+    }
+
+    .path-input {
+        flex: 1;
+        min-width: 0;
+        font-size: 13px;
+    }
+
+    .btn-send {
+        flex: 1;
+        border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+    }
+
+    .presets-bar { gap: 4px; }
+}
