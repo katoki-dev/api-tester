@@ -11,7 +11,7 @@
 <body>
     <div class="app">
         <!-- Sidebar -->
-        <aside class="sidebar">
+        <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <div class="logo">
                     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -19,6 +19,7 @@
                     </svg>
                     <span>API Tester</span>
                 </div>
+                <button class="menu-close" onclick="toggleSidebar()" title="Close Sidebar">✕</button>
             </div>
 
             <!-- Connection -->
@@ -48,12 +49,13 @@
         <!-- Main Content -->
         <main class="main">
             <!-- Top Bar -->
+            <!-- Top Bar -->
             <div class="top-bar">
-                <button class="mobile-menu-btn" onclick="toggleMobileSidebar()" aria-label="Open menu">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <line x1="3" y1="6" x2="21" y2="6"/>
-                        <line x1="3" y1="12" x2="21" y2="12"/>
-                        <line x1="3" y1="18" x2="21" y2="18"/>
+                <button class="mobile-menu-btn" onclick="toggleSidebar()" title="Toggle Sidebar">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
                     </svg>
                 </button>
                 <div class="request-bar">
@@ -129,8 +131,6 @@
             </div>
         </main>
     </div>
-
-    <div class="sidebar-backdrop" onclick="toggleMobileSidebar()"></div>
 
     <script src="app.js"></script>
 </body>

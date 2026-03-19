@@ -6,49 +6,36 @@
 let history = JSON.parse(localStorage.getItem('api_tester_history') || '[]');
 renderHistory();
 
-// ─── Session Persistence ───
-const SESSION_KEY = 'api_tester_session';
-
-function saveSession() {
-    const session = {
-        baseUrl:     document.getElementById('baseUrl').value,
-        jwtToken:    document.getElementById('jwtToken').value,
-        httpMethod:  document.getElementById('httpMethod').value,
-        requestPath: document.getElementById('requestPath').value,
-        requestBody: document.getElementById('requestBody').value,
-    };
-    try { localStorage.setItem(SESSION_KEY, JSON.stringify(session)); } catch (_) {}
-}
-
-function restoreSession() {
-    const saved = localStorage.getItem(SESSION_KEY);
-    if (!saved) return;
-    try {
-        const s = JSON.parse(saved);
-        if (s.baseUrl     !== undefined) document.getElementById('baseUrl').value     = s.baseUrl;
-        if (s.jwtToken    !== undefined) document.getElementById('jwtToken').value    = s.jwtToken;
-        if (s.httpMethod  !== undefined) document.getElementById('httpMethod').value  = s.httpMethod;
-        if (s.requestPath !== undefined) document.getElementById('requestPath').value = s.requestPath;
-        if (s.requestBody !== undefined) document.getElementById('requestBody').value = s.requestBody;
-    } catch (_) {}
-}
-
-// Restore saved session on page load
-restoreSession();
-
 // Color-code method selector on change
 const methodSelect = document.getElementById('httpMethod');
 methodSelect.addEventListener('change', syncMethodColor);
 syncMethodColor();
 
-// Auto-save session state on any field change
-['baseUrl', 'jwtToken', 'requestPath', 'requestBody'].forEach(id => {
-    document.getElementById(id).addEventListener('input', saveSession);
-});
-methodSelect.addEventListener('change', saveSession);
-
 function syncMethodColor() {
     methodSelect.className = 'method-select ' + methodSelect.value;
+}
+
+// ─── Mobile Sidebar ───
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    sidebar.classList.toggle('active');
+    
+    // Add backdrop if needed
+    if (sidebar.classList.contains('active')) {
+        const backdrop = document.createElement('div');
+        backdrop.className = 'sidebar-backdrop';
+        backdrop.onclick = toggleSidebar;
+        document.body.appendChild(backdrop);
+        document.body.style.overflow = 'hidden';
+    } else {
+        const backdrop = document.querySelector('.sidebar-backdrop');
+        if (backdrop) backdrop.remove();
+        if (window.innerWidth > 768) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'auto';
+        }
+    }
 }
 
 // ─── Presets ───
@@ -306,9 +293,3 @@ document.addEventListener('keydown', (e) => {
         sendRequest();
     }
 });
-
-// ─── Mobile Sidebar ───
-function toggleMobileSidebar() {
-    document.querySelector('.sidebar').classList.toggle('open');
-    document.querySelector('.sidebar-backdrop').classList.toggle('visible');
-}

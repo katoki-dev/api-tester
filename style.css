@@ -58,12 +58,28 @@ body {
     color: var(--text-primary);
     overflow: hidden;
     height: 100vh;
+    transition: background 0.3s;
+}
+
+@media (max-width: 768px) {
+    body {
+        overflow-y: auto;
+        height: auto;
+    }
 }
 
 /* ═══ App Layout ═══ */
 .app {
     display: flex;
     height: 100vh;
+}
+
+@media (max-width: 768px) {
+    .app {
+        flex-direction: column;
+        height: auto;
+        min-height: 100vh;
+    }
 }
 
 /* ═══ Sidebar ═══ */
@@ -74,11 +90,58 @@ body {
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s;
+    z-index: 1000;
 }
 
 .sidebar-header {
     padding: 20px;
     border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.menu-close {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 20px;
+    cursor: pointer;
+    padding: 4px;
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        transform: translateX(-100%);
+        box-shadow: none;
+    }
+    
+    .sidebar.active {
+        transform: translateX(0);
+        box-shadow: 20px 0 50px rgba(0, 0, 0, 0.5);
+    }
+    
+    .menu-close {
+        display: block;
+    }
+}
+
+.sidebar-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
 }
 
 .logo {
@@ -140,6 +203,7 @@ body {
     resize: vertical;
     line-break: anywhere;
     word-break: break-all;
+    min-height: 72px;
 }
 
 /* ═══ Buttons ═══ */
@@ -278,6 +342,25 @@ body {
     padding: 16px 20px;
     background: var(--bg-secondary);
     border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.mobile-menu-btn {
+    display: none;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    padding: 8px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .mobile-menu-btn {
+        display: flex;
+    }
 }
 
 .request-bar {
@@ -383,12 +466,31 @@ body {
     overflow: hidden;
 }
 
+@media (max-width: 768px) {
+    .panes {
+        flex-direction: column;
+        overflow: visible;
+        flex: none;
+    }
+}
+
 .pane {
     flex: 1;
     display: flex;
     flex-direction: column;
     min-width: 0;
     overflow: hidden;
+}
+
+@media (max-width: 768px) {
+    .pane {
+        flex: none;
+        height: auto;
+        min-height: 400px;
+        overflow: visible;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+    }
 }
 
 .request-pane {
@@ -442,7 +544,13 @@ body {
     flex: 1;
     overflow: auto;
     position: relative;
-    min-height: 0; /* required for flex children to scroll */
+}
+
+@media (max-width: 768px) {
+    .pane-content {
+        overflow: visible;
+        flex: none;
+    }
 }
 
 .pane-content.hidden { display: none; }
@@ -458,9 +566,17 @@ body {
     font-size: 13px;
     line-height: 1.6;
     padding: 16px 20px;
-    resize: none;
+    resize: vertical;
     outline: none;
     tab-size: 2;
+    min-height: 300px;
+}
+
+@media (max-width: 768px) {
+    .code-editor {
+        height: auto;
+        min-height: 400px;
+    }
 }
 
 .code-editor::placeholder { color: var(--text-muted); }
@@ -523,10 +639,16 @@ body {
     font-size: 13px;
     line-height: 1.6;
     white-space: pre-wrap;
-    word-break: break-word;
+    word-break: break-all;
     color: var(--text-primary);
     min-height: 100%;
     margin: 0;
+}
+
+@media (max-width: 768px) {
+    .response-body {
+        min-height: 300px;
+    }
 }
 
 .response-placeholder {
@@ -564,114 +686,3 @@ body {
 .method-select.PUT    { color: var(--method-put); }
 .method-select.DELETE { color: var(--method-delete); }
 .method-select.PATCH  { color: var(--method-patch); }
-
-/* ═══ Mobile Menu Button ═══ */
-.mobile-menu-btn {
-    display: none;
-    align-items: center;
-    justify-content: center;
-    background: none;
-    border: none;
-    color: var(--text-secondary);
-    cursor: pointer;
-    padding: 8px;
-    border-radius: var(--radius-sm);
-    flex-shrink: 0;
-    transition: all 0.15s;
-}
-.mobile-menu-btn:hover {
-    color: var(--text-primary);
-    background: var(--bg-elevated);
-}
-
-/* ═══ Sidebar Backdrop (mobile) ═══ */
-.sidebar-backdrop {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.6);
-    z-index: 99;
-    backdrop-filter: blur(2px);
-}
-.sidebar-backdrop.visible { display: block; }
-
-/* ═══ Mobile: ≤ 768px ═══ */
-@media (max-width: 768px) {
-    body {
-        height: 100dvh;
-        height: 100vh; /* fallback */
-    }
-
-    .app {
-        height: 100dvh;
-        height: 100vh; /* fallback */
-    }
-
-    .mobile-menu-btn {
-        display: flex;
-    }
-
-    /* Sidebar becomes a slide-over drawer */
-    .sidebar {
-        position: fixed;
-        left: -100%;
-        top: 0;
-        height: 100%;
-        width: min(var(--sidebar-width), 85vw);
-        z-index: 100;
-        transition: left 0.25s ease;
-        overflow-y: auto;
-        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.5);
-    }
-    .sidebar.open { left: 0; }
-
-    /* Top bar: make room for hamburger */
-    .top-bar {
-        padding: 12px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-    .request-bar { flex: 1; }
-
-    /* Presets bar: scroll horizontally, no wrap */
-    .presets-bar {
-        flex-wrap: nowrap;
-        padding: 8px 12px;
-    }
-
-    /* Stack panes vertically */
-    .panes { flex-direction: column; }
-
-    .request-pane {
-        border-right: none;
-        border-bottom: 1px solid var(--border);
-        flex: none;
-        height: 40vh;
-    }
-
-    .response-pane { flex: 1; }
-}
-
-/* ═══ Mobile: ≤ 480px ═══ */
-@media (max-width: 480px) {
-    .request-bar { flex-wrap: wrap; }
-
-    .method-select {
-        border-right: 1px solid var(--border);
-        min-width: 72px;
-    }
-
-    .path-input {
-        flex: 1;
-        min-width: 0;
-        font-size: 13px;
-    }
-
-    .btn-send {
-        flex: 1;
-        border-radius: 0 0 var(--radius-sm) var(--radius-sm);
-    }
-
-    .presets-bar { gap: 4px; }
-}
